@@ -1,0 +1,41 @@
+PART 1...
+Sub part a. 
+	MAE for first 372 elements: 3.645316
+w_ml for the above:
+	w0: intercept term		: 23.371567
+	 miles per gallon Increase With Increasing, intercept term
+	w1: no. of cylinders		: -0.485325
+	 miles per gallon Decrease With Increasing, no. of cylinders
+	w2: displacement		: 0.405800
+	 miles per gallon Increase With Increasing, displacement
+	w3: horsepower			: 0.059906
+	 miles per gallon Increase With Increasing, horsepower	
+	w4: weight			: -5.524877
+	 miles per gallon Decrease With Increasing, weight	
+	w5: acceleration		: 0.157937
+	 miles per gallon Increase With Increasing, acceleration
+	w6: model year			: 2.662883
+	 miles per gallon Increase With Increasing, model year	
+Sub part b.
+	Mean ( MAE ):	2.6711917397
+	Std Dev ( MAE ):	0.486158101571
+
+	Least Mean Absolute Error	: 1.19165563583
+	Best Choice of Wts (Based on Above):
+	w0: intercept term		: 23.467140
+	w1: no. of cylinders		: -0.591237
+	w2: displacement		: 0.868901
+	w3: horsepower			: 0.003528
+	w4: weight			: -5.806199
+	w5: acceleration		: 0.255626
+	w6: model year			: 2.793416
+PART 2...
+	p	err		std		Log Likelihood
+	1	3.289847	0.661238	-53096.956251
+	2	2.704915	0.618850	-49293.113703
+	3	2.591710	0.581180	-48457.807161
+	4	2.659755	0.751461	-49394.126644
+	5	2.700911	0.627069	-49630.526576
+
+	p= 3 : best as per the min err values
+	p= 3 : best as per the log likelihood values
