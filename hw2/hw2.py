@@ -103,6 +103,18 @@ def Q3_a(X_train,X_test,y_train,y_Act,tst_img_arr):
 		if ((k+1)%2!=0):
 			dispIneq(y_pred[:,k], y_Act, 'k_%d'%(k+1), tst_img_arr)
 
+def Q3_b(X_train,X_test,y_train,y_Act,tst_img_arr):
+	tmp=Counter(y_train[:,0])	
+	t_k=tmp.keys()
+	ny=tmp.values()
+	N=sum(t_v)
+	print type(t_k), type(t_v)
+	pyeqY=np.zeros((1,len(t_v)))
+	for i in range(0,len(t_v)):
+		pyeqY[0,i]=float(t_v[i])/N
+	print pyeqY, " is the class prior estimate for each of the class values."
+
+
 def main():
 
 	PATH='./support_files/mnist_csv/'
@@ -115,7 +127,8 @@ def main():
 	tst_img_arr	=np.dot(Q,np.transpose(X_test))
 
 	print "Q3 part a..."
-	Q3_a(X_train,X_test,y_train,y_Act,tst_img_arr)
+#	Q3_a(X_train,X_test,y_train,y_Act,tst_img_arr)
+	Q3_b(X_train,X_test,y_train,y_Act,tst_img_arr)
 	
 	### DEBUGGING ###
 #	dispIneq(y_Act[::-1],y_Act,"k_1",tst_img_arr)
