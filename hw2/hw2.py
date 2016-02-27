@@ -62,6 +62,12 @@ def knn_main(K_max,X_train, y_train, vec_test):
 		y_pred[0,k-1]	=label
 	return y_pred
 
+def norVec(vec):
+	mag = 0
+	for elem in vec:
+		mag = mag + (elem**2)
+	return vec/np.sqrt(mag)
+
 def conMat(y_pred,y_act):
 	# C--> ConMatrix
 	C=np.zeros((10,10))
@@ -82,6 +88,7 @@ def dispIneq(y_pred,y_act, filename, tst_img_arr):
 		plt.title('$y_{pred}=%d, y_{actual}=%d$'%(y_pred[ind[i]],y_act[ind[i]]))
 		filepath="./images/%s_act%d_pred%d_%d.png"%(filename,y_act[ind[i]],y_pred[ind[i]],i+1)
 		plt.savefig(filepath)
+	return ind
 
 def Q3_a(X_train,X_test,y_train,y_Act,tst_img_arr):
 	print "Q3 part a..."
@@ -140,14 +147,52 @@ def Q3_b(X_train, X_test, y_train, y_Act, tst_img_arr, Q):
 	print "Accuracy: %.2f%%" %(accuracy)
 	img_arr = np.dot(Q,np.transpose(mu))
 #	print np.size(img_arr,axis=0),np.size(img_arr,axis=1)
-	for i in range(0,len(t_k)):
+	for i in range(0,NUM_IMAGES):
 		plt.imshow(img_arr[:,i].reshape((28,28)))
                 plt.title('$\mu for class=%d$'%(i))
                 filepath="./images/part3b_mu_%d.png"%(i)
                 plt.savefig(filepath)
-	
-	dispIneq(y_pred,y_Act,'Bayes_',tst_img_arr)
-		
+	## ind--> unequal indices
+	ind=dispIneq(y_pred,y_Act,'Bayes_',tst_img_arr)
+	for i in range(0,len(ind)):
+		print "\ti=%d, Calculated Class=%d, Actual Class=%d"%(ind[i],y_pred[ind[i],:],y_Act[ind[i],:])
+		print "\n\tclass,\t\tprobability"
+		ct=0
+		for elem in norVec(prob_list[ind[i]]):
+			print "\t%d\t\t%s" %(ct, elem)
+			ct = ct + 1
+
+def Q3_c(X_train, X_test, y_train, y_Act, tst_img_arr, Q):
+        print "Q3 Part c..."
+        num_test= np.size(X_test,axis=0)
+        tmp	= Counter(y_train[:,0])
+        t_k	= tmp.keys()  # holds the classes
+        t_v	= tmp.values()# holds the count for each class
+        N	= sum(t_v)      # total number of classes (N)
+
+ 	x_tr	= np.hstack((X_train,np.ones((np.size(X_train,axis=0),1))))	
+	x_te	= np.hstack((X_test,np.ones((np.size(X_test,axis=0),1))))
+	w	= np.zeros((np.size(x_tr,axis=1),10))
+	nu 	= 0.1/5000
+	w_list	= []
+	ll_list	= []		#Log likelihood
+	for l in range(0,1000):
+		w_list.append(w)
+		ll	= 0
+		del_l	= np.zeros((1,np.size(x_tr,axis=1)))
+		for i in range(0, np.size(x_tr,axis=0)): 		
+#			print "xt_{i}.w",np.dot(x_tr[i,:],w)
+			den 	= np.sum(np.exp(np.dot(x_tr[i,:],w)))
+			cl	= y_train[i]
+			num	= np.exp (np.dot(x_tr[i,:],w[:,int(cl)]))
+			ll	= ll + np.dot (x_tr[i,:], w[:,int(cl)]) - np.log(den)
+			paran	= 1 - (num/den) 
+			del_l	= del_l + paran*x_tr[i,:]
+		for k in range(0,10):
+			w[:,k]  	= w[:,k] + (nu*del_l)
+		ll_list.append(ll)
+
+
 def predBayes(vec_test,mu,invcov,cov,pi):
 	sig=np.zeros((1,len(invcov)))
 	label_arr=np.zeros((2,len(invcov)))
@@ -184,8 +229,8 @@ def main():
 	tst_img_arr	=np.dot(Q,np.transpose(X_test))
 
 #	Q3_a(X_train,X_test,y_train,y_Act,tst_img_arr)
-	Q3_b(X_train,X_test,y_train,y_Act,tst_img_arr,Q)
-#	Q3_c	
+#	Q3_b(X_train,X_test,y_train,y_Act,tst_img_arr,Q)
+	Q3_c(X_train,X_test,y_train,y_Act,tst_img_arr,Q)	
 	### DEBUGGING ###
 #	dispIneq(y_Act[::-1],y_Act,"k_1",tst_img_arr)
 
