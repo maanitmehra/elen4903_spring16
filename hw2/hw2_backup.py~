@@ -5,7 +5,7 @@ from collections import Counter
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
-import matplotlib.cm as cm
+
 
 MAX_K_VAL=9
 NUM_IMAGES=3
@@ -172,57 +172,76 @@ def Q3_c(X_train, X_test, y_train, y_Act, tst_img_arr, Q):
 	XTrain = np.genfromtxt("support_files/mnist_csv/Xtrain.txt", dtype='float32', delimiter =',').T 
 	Q = np.genfromtxt("support_files/mnist_csv/Q.txt", dtype='float32', delimiter =',')
 
-	nu = 0.1/5000
-	x_tr = np.concatenate((XTrain, np.ones((1,5000))), axis=0)
-	w 	= np.zeros((np.size(x_tr,axis=0),10))
-	w_old 	= np.zeros((np.size(x_tr,axis=0),10))
-	ll_list = np.zeros((1000,1))
+	# 3/c
+	nu_c = 0.1/5000
+	w = np.zeros((21,10))
+	# Augment original matrix with a row of ones
+	XTrain_C = np.concatenate((XTrain, np.ones((1,5000))), axis=0)
+	w_old = np.zeros((21,10))
+	likelihoodLog = np.zeros((1000,1))
 	for i in range(0,1000):
-    		den = np.sum(np.exp(np.dot(x_tr.T,w_old)), axis=1, keepdims=True)
+    		# The sum in the denominator which does not depend on class
+    		denomSum = np.sum(np.exp(np.dot(XTrain_C.T,w_old)), axis=1, keepdims=True)
+    		# Calculate each w_i
     	for k in range(0,10):
-        	w[:,k:k+1] = w_old[:,k:k+1] + nu*(np.sum(x_tr[:,k*500:(k+1)*500], axis=1,keepdims=True) -np.sum((x_tr.T*np.exp(np.dot(x_tr.T,w_old[:,k:k+1]))/den).T, axis = 1, keepdims=True))
+        	w[:,k:k+1] = w_old[:,k:k+1] + nu_c*(np.sum(XTrain_C[:,k*500:(k+1)*500], axis=1,keepdims=True) -np.sum((XTrain_C.T*np.exp(np.dot(XTrain_C.T,w_old[:,k:k+1]))/denomSum).T, axis = 1, keepdims=True))
+    		# After each w_i is calculated update w_old for next iteration
     		w_old = w
-    		temp = 0    
+    # Calculate the loglikelihodd at each iteration
+    # Term which varies over the different class
+    		partialsum = 0    
     		for j in range(0,10):
-        		temp = temp + np.sum(np.dot(x_tr[:,j*500:(j+1)*500].T,w[:,j:j+1]))
-    		ll_list[i,0] = temp-np.sum(np.log(np.sum(np.exp(np.dot(x_tr.T,w)), axis=1, keepdims=True)))
+        		partialsum = partialsum + np.sum(np.dot(XTrain_C[:,j*500:(j+1)*500].T,w[:,j:j+1]))
+    		# Loglikelihood
+    		likelihoodLog[i,0] = partialsum-np.sum(np.log(np.sum(np.exp(np.dot(XTrain_C.T,w)), axis=1, keepdims=True)))
     		if i%100 ==0:
         		print str(i/10) + '% done.'        
 
+	# Plot likelihood
 	fig = plt.figure()            
 	fig.suptitle('Likelihood of logistic regression with %s iteration'%(int(i+1)), fontsize=18)	
-	plt.plot(ll_list)
+	plt.plot(likelihoodLog)
 	plt.ylabel('Log likelihood')
 	plt.xlabel('Number of iteration')
 	fig.show()        
  
+	## Prediction
+		#XTest_C = np.concatenate((XTest, np.ones((1,500))), axis=0)
+	#predLog = np.dot(XTest_C.T, w)
+	#labelPredLog = np.argmax(predLog, axis=1).reshape(500,1)
+
+	# Prediction
+	# Augment train matrix with ones
 	XTest_C = np.concatenate((XTest, np.ones((1,500))), axis=0)
+	# Predict labels
 	predLog = np.exp(np.dot(XTest_C.T, w))
+	# Normalize
 	predLog = predLog/np.sum(predLog, axis=1, keepdims=True) 
 	labelPredLog = np.argmax(predLog, axis=1).reshape(500,1)
 
-	## Confusion matrix and prediction accuracy
+	# Confusion matrix and prediction accuracy
 	C_Log = np.zeros((10,10))
 	errorIdx = []
 	for i in range(0,500):
  	   	C_Log[labelTest[i,0],labelPredLog[i,0]] += int(1)
     		if labelTest[i,0] != labelPredLog[i,0]:
         		errorIdx.append(i)
-	predAccLog = np.trace(C_Log)*100.0/500
+	predAccLog = np.trace(C_Log)/500
 
-	print "\tConfusion Matrix: \n",C_Log
-	print "Accuracy %.2f"%predAccLog
-
-	for j in range(0,NUM_IMAGES):
+	# Plots for misclassified image
+	for j in range(0,3):
+    	# Reconstruct image
     		pic = -np.dot(Q,XTest[:,errorIdx[j]]).reshape(28,28)
     		fig = plt.figure()            
     		fig.suptitle('Misclassified, Log regression, true class: %s, predicted: %s, Testindex: %s'%(labelTest[errorIdx[j],0],int(labelPredLog[errorIdx[j],0]), errorIdx[j]), fontsize=18)
+    		#plt.imshow(pic, cm.Greys_r)
     		fig.show()
+    # Calculate probability distribution
     		predLog = np.exp(np.dot(XTest_C[:,errorIdx[j]].T, w))
-
+    # Normalize
     		predLog = predLog/np.sum(predLog)
     		fig = plt.figure()
-    		fig.suptitle('Incorrectly classified Distribution by Log regression, Testindex: %s'%(errorIdx[j]), fontsize=18)
+    		fig.suptitle('Misclassified probability distribution, Log regression, Testindex: %s'%(errorIdx[j]), fontsize=18)
     		plt.bar(np.arange(len(predLog)),predLog, align='center')
     		fig.show()
 
@@ -264,8 +283,10 @@ def main():
 	y_Act		=getData(PATH+'label_test.txt')
 	tst_img_arr	=np.dot(Q,np.transpose(X_test))
 
-	Q3_a(X_train,X_test,y_train,y_Act,tst_img_arr)
-	Q3_b(X_train,X_test,y_train,y_Act,tst_img_arr,Q)
+#	Q3_a(X_train,X_test,y_train,y_Act,tst_img_arr)
+#	Q3_b(X_train,X_test,y_train,y_Act,tst_img_arr,Q)
 	Q3_c(X_train,X_test,y_train,y_Act,tst_img_arr,Q)	
+	### DEBUGGING ###
+#	dispIneq(y_Act[::-1],y_Act,"k_1",tst_img_arr)
 
 main()

@@ -264,8 +264,8 @@ def main():
 	y_Act		=getData(PATH+'label_test.txt')
 	tst_img_arr	=np.dot(Q,np.transpose(X_test))
 
-	Q3_a(X_train,X_test,y_train,y_Act,tst_img_arr)
-	Q3_b(X_train,X_test,y_train,y_Act,tst_img_arr,Q)
+#	Q3_a(X_train,X_test,y_train,y_Act,tst_img_arr)
+#	Q3_b(X_train,X_test,y_train,y_Act,tst_img_arr,Q)
 	Q3_c(X_train,X_test,y_train,y_Act,tst_img_arr,Q)	
 
 main()
