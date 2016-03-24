@@ -42,8 +42,19 @@ def genW(k):
 		w[0][i] = (i+1)*p
 	return w
 
-#def adaBoost():
-	
+def gaussParam(class_k, X_train, y_train):
+        ind=[]
+        for i in range(0,len(y_train)):
+            if y_train[i,0] == class_k:
+                ind.append(i)
+        x_train_cal=X_train[ind,:]
+        n_y=np.size(x_train_cal,axis=0)
+        mu= np.mean(x_train_cal,axis=0)
+        cov=np.dot(np.transpose(x_train_cal-mu),x_train_cal)/n_y
+        return mu,cov
+
+def adaBoost():
+	return 0		
 
 	
 ## p1 --> Part 1
@@ -54,26 +65,40 @@ def p1():
 	for n in n_list:
 		w = genW(k)
 		c = genC(n,w)
-		print "\t",c
+		#print "\t",c
 		#plt.hist(c)
 		plt.clf()
 		z, bins, patches = plt.hist(c, 4, normed=1, facecolor='green', alpha=0.75)
+#		print patches
+		sigma = np.std(c)
+		mu = np.mean(c)
+		# add a 'best fit' line
+		#y = mlab.normpdf( bins, mu, sigma)
+		#l = plt.plot(bins, y, 'r--', linewidth=1)
 		plt.plot(bins)
 		#plt.imshow()
 		plt.savefig(PATH+'../images/p1_hist_'+str(n)+'.jpg')
 	return n_list
 
 ## part 2
-def p2(y_out):
+def p2(X_train, y_train, X_test, y_test):
 	print "\tPart 2 >>"
-	print y_out
+	y_out	= y_train.T
+	#print y_out
 	labels		= np.array(Counter(y_out[0]).keys()).astype(np.int32)
 	label_counts	= np.array(Counter(y_out[0]).values()).astype(np.int32)
 	label_prob	= np.array([count*1.0/np.sum(label_counts) for count in label_counts], dtype = np.float32).T.astype(np.float32)
 	print label_prob
 	label_arr	= np.transpose(np.vstack((labels,label_counts,label_prob)))		
-	print label_arr
-
+	#print label_arr
+	
+	mu_list		= np.zeros((len(labels), len(X_train[0,1:])))
+	cov_list	= []
+#	print mu_list
+	for idx,label in enumerate(labels):
+		mu_list[idx,:], cov = gaussParam(label, X_train[:,1:], y_train)
+		cov_list.append(cov)
+	print cov_list
 
 ## part 3
 def p3():
@@ -93,6 +118,7 @@ def main():
 	y_train= y[NUM_TEST:,:]
 	
 	p1()
-	p2(y_train.T)
+	p2(X_train, y_train, X_test, y_test)
 	p3()
+
 main()
