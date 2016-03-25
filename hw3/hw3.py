@@ -1,10 +1,6 @@
 #!/usr/bin/python
-import subprocess
 import csv
 import numpy as np
-import scipy as sp
-import math
-import random
 import pandas as pd
 from collections import Counter
 
@@ -70,8 +66,8 @@ def p1():
 		plt.clf()
 		z, bins, patches = plt.hist(c, 4, normed=1, facecolor='green', alpha=0.75)
 #		print patches
-		sigma = np.std(c)
-		mu = np.mean(c)
+		#sigma = np.std(c)
+		#mu = np.mean(c)
 		# add a 'best fit' line
 		#y = mlab.normpdf( bins, mu, sigma)
 		#l = plt.plot(bins, y, 'r--', linewidth=1)
@@ -82,42 +78,31 @@ def p1():
 
 ## part 2
 def p2(X_train, y_train, X_test, y_test):
-	print "\tPart 2 >>"
-	y_out	= y_train.T
-	#print y_out
+    print "\tPart 2 >>"
 
-#	labels		= np.array(Counter(y_out[0]).keys()).astype(np.int32)
-#	label_counts	= np.array(Counter(y_out[0]).values()).astype(np.int32)
-#	label_prob	= np.array([count*1.0/np.sum(label_counts) for count in label_counts], dtype = np.float32).T.astype(np.float32)
-#	print label_prob
-#	label_arr	= np.transpose(np.vstack((labels,label_counts,label_prob)))		
-#	#print label_arr
-	
-#	mu_list		= np.zeros((len(labels), len(X_train[0,1:])))
-#	cov_list	= []
-#	print mu_list
-#	for idx,label in enumerate(labels):
-#		mu_list[idx,:], cov = gaussParam(label, X_train[:,1:], y_train)
-#		cov_list.append(cov)
-#	print cov_list
-
-	train = np.hstack((X_train[:,1:],y_train))
-	cl1 = []
-	cl_1 = []
-	for row in train:
+    train = np.hstack((X_train[:,1:],y_train))
+    cl_1 = []
+    cl_0 = []
+    for row in train:
 		if row[-1] == 1:
-			cl1.append(row[:-1])
-		else:
 			cl_1.append(row[:-1])
-	cl1	= np.array(cl1)
-	cl_1	= np.array(cl_1)
+		else:
+			cl_0.append(row[:-1])
+    cl_1 = np.array(cl_1)
+    cl_0	= np.array(cl_0)
 
-	mu1 = np.mean(cl1, axis=0)
-	mu_1= np.mean(cl_1, axis=0)
+    mu_1 = np.mean(cl_1, axis=0)     # mu of y=1
+    mu_0= np.mean(cl_0, axis=0)    # mu of y=-1
 
-	print mu1, mu_1
-	cov = np.cov(cl1[:,:-1], cl_1[:,:-1])
-	print np.linalg.pinv(cov)	
+    pi_1 = len(cl_1)*1.0/(len(cl_1)+len(cl_0))
+    pi_0= 1- pi1
+    
+    print pi1, pi0     
+    
+    print mu1, mu_1                
+    cov = np.cov( X_train[:,1:] )
+    inv_cov = np.linalg.pinv(cov)	
+    
 
 ## part 3
 def p3():
