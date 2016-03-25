@@ -85,20 +85,39 @@ def p2(X_train, y_train, X_test, y_test):
 	print "\tPart 2 >>"
 	y_out	= y_train.T
 	#print y_out
-	labels		= np.array(Counter(y_out[0]).keys()).astype(np.int32)
-	label_counts	= np.array(Counter(y_out[0]).values()).astype(np.int32)
-	label_prob	= np.array([count*1.0/np.sum(label_counts) for count in label_counts], dtype = np.float32).T.astype(np.float32)
-	print label_prob
-	label_arr	= np.transpose(np.vstack((labels,label_counts,label_prob)))		
-	#print label_arr
+
+#	labels		= np.array(Counter(y_out[0]).keys()).astype(np.int32)
+#	label_counts	= np.array(Counter(y_out[0]).values()).astype(np.int32)
+#	label_prob	= np.array([count*1.0/np.sum(label_counts) for count in label_counts], dtype = np.float32).T.astype(np.float32)
+#	print label_prob
+#	label_arr	= np.transpose(np.vstack((labels,label_counts,label_prob)))		
+#	#print label_arr
 	
-	mu_list		= np.zeros((len(labels), len(X_train[0,1:])))
-	cov_list	= []
+#	mu_list		= np.zeros((len(labels), len(X_train[0,1:])))
+#	cov_list	= []
 #	print mu_list
-	for idx,label in enumerate(labels):
-		mu_list[idx,:], cov = gaussParam(label, X_train[:,1:], y_train)
-		cov_list.append(cov)
-	print cov_list
+#	for idx,label in enumerate(labels):
+#		mu_list[idx,:], cov = gaussParam(label, X_train[:,1:], y_train)
+#		cov_list.append(cov)
+#	print cov_list
+
+	train = np.hstack((X_train[:,1:],y_train))
+	cl1 = []
+	cl_1 = []
+	for row in train:
+		if row[-1] == 1:
+			cl1.append(row[:-1])
+		else:
+			cl_1.append(row[:-1])
+	cl1	= np.array(cl1)
+	cl_1	= np.array(cl_1)
+
+	mu1 = np.mean(cl1, axis=0)
+	mu_1= np.mean(cl_1, axis=0)
+
+	print mu1, mu_1
+	cov = np.cov(cl1[:,:-1], cl_1[:,:-1])
+	print np.linalg.pinv(cov)	
 
 ## part 3
 def p3():
