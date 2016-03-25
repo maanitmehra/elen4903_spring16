@@ -35,8 +35,9 @@ X_train= X[NUM_TEST:,:]
 y_test = y[:NUM_TEST,:]
 y_train= y[NUM_TEST:,:]
 
-BINARY = 0
-ONLINE = 1
+NONE = 0
+BINARY = 1
+ONLINE = 2
 
 def genC(n, w):
 	w_cumul	= w.cumsum()
@@ -45,6 +46,14 @@ def genC(n, w):
 	c 	= [w_arr[(w_arr > np.random.random())].index[0] for i in range(0,n)]		
 	return c
 
+def calc_ft(X_train, w, classifier):
+    if classifier == BINARY or classifier == NONE:
+        ft = np.sign(np.dot(X_train, w))
+    for elem in ft:
+        if not elem:
+            elem = np.sign(np.random.random()-0.5)
+    return ft
+    
 def BinaryClassifier(X_train, y_train):
     n = np.size(X_train,axis=0)
     w = np.ones((np.size(X_train,axis=1),1))
@@ -75,7 +84,8 @@ def BinaryClassifier(X_train, y_train):
     return w
 
 def OnlineClassifier(X_train, y_train):
-    w = np.ones((10,1))
+    n = np.size(X_train,axis=0)
+    w = np.ones((np.size(X_train,axis=1),1))
     return w
 
 def Adaboost(X_train, y_train, X_test, y_test, T ,classifier):
@@ -85,6 +95,7 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier):
     eps_list = []
     err_train = []
     err_test  = []
+    pt_list = []
     for i in range(0,T):
         Bt = genC(n,pt)
         #print Bt
@@ -92,8 +103,16 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier):
         y_bt = y_train[Bt]
         if classifier ==BINARY:
             w = BinaryClassifier(X_bt, y_bt)
-            print w
+        elif classifier == ONLINE:
+            w = OnlineClassifier(X_bt, y_bt)
+        elif classifier == NONE:
+            w = BinaryClassifier(X_train, y_train)
         
+        ft = calc_ft(X_train, w, classifier)
+        
+            
+
+            
 def p1():
     print "Part 1:\n"
     n_list = [50,150,250]
@@ -112,7 +131,8 @@ def p1():
         
 def p2():
     print "Part 2:\n"
-    Adaboost(X_train, y_train, X_test, y_test, 10 , BINARY)
+    classifier = BINARY
+    Adaboost(X_train, y_train, X_test, y_test, T , classifier)
     
     
 def p3():
