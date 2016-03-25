@@ -19,7 +19,7 @@ import matplotlib.cm as cm
 PATH = "./cancer_csv/"
 IMAGE_PATH = PATH+'../images/'
 NUM_TEST = 183  # Define the number of test cases
-T = 10	# number of iterations of the problem
+T = 1000	# number of iterations of the problem
 
 def getData(file):
     reader=csv.reader(open(file,"rb"),delimiter=',')
@@ -47,10 +47,7 @@ def genC(n, w):
 	return c
 
 def calc_ft(X_train, w, classifier):
-    if classifier == BINARY or classifier == NONE:
-        ft = np.sign(np.dot(X_train, w))
-    elif classifier  ==  ONLINE:
-	ft = np.sign(np.dot(X_train,w))
+    ft = np.sign(np.dot(X_train,w))
 
     for elem in ft:
         if not elem:
@@ -88,11 +85,31 @@ def BinaryClassifier(X_train, y_train):
 
 def OnlineClassifier(X_train, y_train):
     n = np.size(X_train,axis=0)
-    w = np.ones((np.size(X_train,axis=1),1))
-    return w
+    w = np.zeros((np.size(X_train,axis=1),1))
+
+    
+        
+    eta = 0.1   #step size
+    for i in range(0,n):
+        z = np.array(np.dot(y_train[i]*X_train[i,:],w))
+        #print np.size(z, axis=0), np.size(z,axis=1)
+        sig = 1.0/(1+np.exp(-z))   
+        print "yX:"
+        print np.size(y_train[i]*X_train[i,:],axis=0)
+        #print np.size(y_train[i]*X_train[i,:],axis=1)
+        w = np.array(w) + np.array(eta*(1-sig)*y_train[i]*X_train[i,:])
+        #print i
+        
+    return w[-1]
 
 def calcEps(y_train, f_train, pt):
-    sgn_vec = [np.sign(y_train[idx]*f_train[idx,0]) for idx,elem in enumerate(y_train)]
+    print type(y_train)
+    #print np.size(f_train, axis =1)
+    try:
+        sgn_vec = [np.sign(y_train[idx]*f_train[idx,0]) for idx,elem in enumerate(y_train)]
+    except:
+        sgn_vec = [np.sign(y_train[idx]*f_train[idx]) for idx,elem in enumerate(y_train)]
+        
     eps = 0
     for idx,sign in enumerate(sgn_vec):
         if sign < 0:
@@ -100,6 +117,8 @@ def calcEps(y_train, f_train, pt):
     return eps, sgn_vec
 
 def calcAlpha(eps):
+    if not eps:
+        eps = 1e-8
     alpha = 0.5*np.log((1-eps)/eps)
     return alpha
     
