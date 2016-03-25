@@ -17,9 +17,9 @@ import matplotlib.mlab as mlab
 import matplotlib.cm as cm
 
 PATH = "./cancer_csv/"
-
+IMAGE_PATH = PATH+'../images/'
 NUM_TEST = 183  # Define the number of test cases
-T = 100	# number of iterations of the problem
+T = 1000	# number of iterations of the problem
 
 def getData(file):
     reader=csv.reader(open(file,"rb"),delimiter=',')
@@ -99,16 +99,42 @@ def calcEps(y_train, f_train, pt):
 def calcAlpha(eps):
     alpha = 0.5*np.log((1-eps)/eps)
     return alpha
+    
+def calcErr(f, y):
+    C = conMat(f,y)
+    num_test = len(y)
+    accuracy = np.trace(C)*1.0/(num_test)
+    err = 1- accuracy
+    return err
 
-def Adaboost(X_train, y_train, X_test, y_test, T ,classifier):
+def conMat(y_pred,y_act):
+        # C--> ConMatrix
+        C=np.zeros((10,10))
+        for i in range(0, np.size(y_pred)):
+                real=int(y_act[i])
+                pred=int(y_pred[i])
+                C[real,pred]=C[real,pred]+1
+        return C
+    
+    
+def Adaboost(X_train, y_train, X_test, y_test, T ,classifier, name):
     n = np.size(X_train,axis=0)
     pt = (1.0)/n * np.ones((n,1))
+    
+    #alpha & epsilon: parameters used to update the values.
     alpha_list = []
     eps_list = []
-    err_train = []
-    err_test  = []
+    
+    #error vectors
+    err_train_list = []
+    err_test_list  = []
+
+    #pt as described in the documentation
     pt_list = []
     w_list = []
+    
+    f_boost_te = 0
+    f_boost_tr = 0
     for i in range(0,T):
         Bt = genC(n,pt)
         #print Bt
@@ -122,8 +148,8 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier):
             w = BinaryClassifier(X_train, y_train)
             
         w_list.append(w)
-        f_t = calc_ft(X_bt, w, classifier)
         f_train = calc_ft(X_train, w, classifier)
+        f_test = calc_ft(X_test, w, classifier)
 
         eps, sgn_vec = calcEps(y_train, f_train, pt)
         eps_list.append(eps)
@@ -135,9 +161,30 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier):
         for idx, elem in enumerate(pt):
             pt[idx] = elem*np.exp(-alpha*sgn_vec[idx])
         pt = pt/np.sum(pt)
+        
+        f_boost_te = f_boost_te + (alpha*f_test)
+        f_boost_test = np.sign(f_boost_te)
+        
+        err_test = calcErr(f_boost_test, y_test)
+        err_test_list.append(err_test)
+
+        f_boost_tr = f_boost_tr + (alpha*f_train)
+        f_boost_train = np.sign(f_boost_tr)
+        
+        err_train = calcErr(f_boost_train, y_train)
+        err_train_list.append(err_train)
+        
+        
+
+#    f_boost = np.sum(f_boost)    
     print "pt_list:", pt_list    
     print "alpha_list", alpha_list
-        
+    print "training Error:", err_train_list
+    print "testing Error:", err_test_list
+    plt.clf()
+    plt.plot(err_train_list, 'r-', err_test_list, 'b-')    
+    plt.savefig(name)
+    
 def p1():
     print "Part 1:\n"
     n_list = [50,150,250]
@@ -152,17 +199,19 @@ def p1():
         plt.ylabel("Number")
         plt.title("Histogram for n=%d"%n)
         plt.bar(np.array(range(0,len(hist))), np.array(hist), align='center')    
-        plt.savefig(PATH+'../images/p1_hist_'+str(n)+'.jpg')
+        plt.savefig(IMAGE_PATH+'p1_hist_'+str(n)+'.jpg')
         
 def p2():
     print "Part 2:\n"
     classifier = BINARY
-    Adaboost(X_train, y_train, X_test, y_test, T , classifier)
+    Adaboost(X_train, y_train, X_test, y_test, T , classifier, IMAGE_PATH+"p2_error.jpg")
     
     
 def p3():
     print "Part 3:\n"
-    
+    classifier = ONLINE
+    Adaboost(X_train, y_train, X_test, y_test, T , classifier, IMAGE_PATH+"p3_error.jpg")
+   O 
 def main():
     print "Beginning Execution..."
 
