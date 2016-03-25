@@ -56,15 +56,22 @@ def BinaryClassifier(X_train, y_train):
             idx_1.append(idx)
         else:
             idx_0.append(idx)
-    mu_0 = X_train[idx_0,1:]
-    mu_1 = X_train[idx_1,1:]
+    cl_0 = X_train[idx_0,1:]
+    cl_1 = X_train[idx_1,1:]
+
+    mu_0 = np.array(np.mean(cl_0,axis=0)).reshape(1,np.size(cl_0, axis=1))
+    mu_1 = np.array(np.mean(cl_1, axis=0)).reshape(1, np.size(cl_1, axis=1))
 
     pi_1 = len(idx_1)*1.0/n
     pi_0 = len(idx_0)*1.0/n
     
-    cov  = np.cov(X_train[:,1:])
-
-    print pi_1, pi_0         
+    cov  = np.cov(X_train[:,1:].T)
+    #print "cov size: %d x %d"%(np.size(cov,axis=0), np.size(cov,axis=1))
+    #print "mu_0 size: %d x %d"%(np.size(mu_0,axis=0),np.size(mu_0,axis=1))
+    #print type(mu_0)
+    w[0] = np.log(pi_1/pi_0) - 0.5*np.dot((mu_1+mu_0),np.dot(np.linalg.pinv(cov),(mu_1-mu_0).T))
+    w[1:] = np.dot(np.linalg.pinv(cov),(mu_1-mu_0).T)
+    #print pi_1, pi_0         
     return w
 
 def OnlineClassifier(X_train, y_train):
@@ -80,11 +87,12 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier):
     err_test  = []
     for i in range(0,T):
         Bt = genC(n,pt)
-        print Bt
+        #print Bt
         X_bt = X_train[Bt]
         y_bt = y_train[Bt]
         if classifier ==BINARY:
             w = BinaryClassifier(X_bt, y_bt)
+            print w
         
 def p1():
     print "Part 1:\n"
