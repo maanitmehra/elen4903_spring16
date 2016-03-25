@@ -19,7 +19,7 @@ import matplotlib.cm as cm
 PATH = "./cancer_csv/"
 
 NUM_TEST = 183  # Define the number of test cases
-T = 1000	# number of iterations of the problem
+T = 100	# number of iterations of the problem
 
 def getData(file):
     reader=csv.reader(open(file,"rb"),delimiter=',')
@@ -88,6 +88,18 @@ def OnlineClassifier(X_train, y_train):
     w = np.ones((np.size(X_train,axis=1),1))
     return w
 
+def calcEps(y_train, f_train, pt):
+    sgn_vec = [np.sign(y_train[idx]*f_train[idx,0]) for idx,elem in enumerate(y_train)]
+    eps = 0
+    for idx,sign in enumerate(sgn_vec):
+        if sign < 0:
+            eps = eps + pt[idx]
+    return eps, sgn_vec
+
+def calcAlpha(eps):
+    alpha = 0.5*np.log((1-eps)/eps)
+    return alpha
+
 def Adaboost(X_train, y_train, X_test, y_test, T ,classifier):
     n = np.size(X_train,axis=0)
     pt = (1.0)/n * np.ones((n,1))
@@ -96,6 +108,7 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier):
     err_train = []
     err_test  = []
     pt_list = []
+    w_list = []
     for i in range(0,T):
         Bt = genC(n,pt)
         #print Bt
@@ -107,21 +120,33 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier):
             w = OnlineClassifier(X_bt, y_bt)
         elif classifier == NONE:
             w = BinaryClassifier(X_train, y_train)
-        
-        ft = calc_ft(X_train, w, classifier)
-        
             
+        w_list.append(w)
+        f_t = calc_ft(X_bt, w, classifier)
+        f_train = calc_ft(X_train, w, classifier)
 
-            
+        eps, sgn_vec = calcEps(y_train, f_train, pt)
+        eps_list.append(eps)
+        
+        alpha = calcAlpha(eps)
+        alpha_list.append(alpha)
+
+        pt_list.append(pt)
+        for idx, elem in enumerate(pt):
+            pt[idx] = elem*np.exp(-alpha*sgn_vec[idx])
+        pt = pt/np.sum(pt)
+    print "pt_list:", pt_list    
+    print "alpha_list", alpha_list
+        
 def p1():
     print "Part 1:\n"
     n_list = [50,150,250]
     w = np.array([0.1,0.2,0.3,0.4])
     for n in n_list:
         sample = genC(n,w)
-        print sample
+        #print sample
         hist, bins = np.histogram(sample, bins=len(w))
-        print hist, bins
+        #print hist, bins
         plt.clf()
         plt.xlabel("Generated Sample Indices")
         plt.ylabel("Number")
