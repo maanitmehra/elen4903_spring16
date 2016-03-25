@@ -19,7 +19,7 @@ import matplotlib.cm as cm
 PATH = "./cancer_csv/"
 IMAGE_PATH = PATH+'../images/'
 NUM_TEST = 183  # Define the number of test cases
-T = 1000	# number of iterations of the problem
+T = 10	# number of iterations of the problem
 
 def getData(file):
     reader=csv.reader(open(file,"rb"),delimiter=',')
@@ -49,6 +49,9 @@ def genC(n, w):
 def calc_ft(X_train, w, classifier):
     if classifier == BINARY or classifier == NONE:
         ft = np.sign(np.dot(X_train, w))
+    elif classifier  ==  ONLINE:
+	ft = np.sign(np.dot(X_train,w))
+
     for elem in ft:
         if not elem:
             elem = np.sign(np.random.random()-0.5)
@@ -141,8 +144,10 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier, name):
         X_bt = X_train[Bt]
         y_bt = y_train[Bt]
         if classifier ==BINARY:
+            classifier_name = "Binary_Classifier"
             w = BinaryClassifier(X_bt, y_bt)
         elif classifier == ONLINE:
+            classifier_name = "Online_Classifier"
             w = OnlineClassifier(X_bt, y_bt)
         elif classifier == NONE:
             w = BinaryClassifier(X_train, y_train)
@@ -174,7 +179,6 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier, name):
         err_train = calcErr(f_boost_train, y_train)
         err_train_list.append(err_train)
         
-        
 
 #    f_boost = np.sum(f_boost)    
     print "pt_list:", pt_list    
@@ -182,7 +186,12 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier, name):
     print "training Error:", err_train_list
     print "testing Error:", err_test_list
     plt.clf()
-    plt.plot(err_train_list, 'r-', err_test_list, 'b-')    
+    plt.plot(err_train_list, 'r-', label="Training error")
+    plt.plot(err_test_list, 'b-', label="Testing Error")    
+    plt.xlabel("Values of t")
+    plt.ylabel("Error Values")
+    plt.title("Error v/s iteration plot for "+classifier_name)
+    plt.legend(loc='upper right', shadow=True)
     plt.savefig(name)
     
 def p1():
@@ -204,14 +213,14 @@ def p1():
 def p2():
     print "Part 2:\n"
     classifier = BINARY
-    Adaboost(X_train, y_train, X_test, y_test, T , classifier, IMAGE_PATH+"p2_error.jpg")
+    Adaboost(X_train, y_train, X_test, y_test, T , classifier, IMAGE_PATH+"binary_classifier_error.jpg")
     
     
 def p3():
     print "Part 3:\n"
     classifier = ONLINE
     Adaboost(X_train, y_train, X_test, y_test, T , classifier, IMAGE_PATH+"p3_error.jpg")
-   O 
+    
 def main():
     print "Beginning Execution..."
 
