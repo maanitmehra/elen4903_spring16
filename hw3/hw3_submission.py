@@ -35,7 +35,8 @@ X_train= X[NUM_TEST:,:]
 y_test = y[:NUM_TEST,:]
 y_train= y[NUM_TEST:,:]
 
-
+BINARY = 0
+ONLINE = 1
 
 def genC(n, w):
 	w_cumul	= w.cumsum()
@@ -44,13 +45,46 @@ def genC(n, w):
 	c 	= [w_arr[(w_arr > np.random.random())].index[0] for i in range(0,n)]		
 	return c
 
-def Adaboost(X_train, y_train, X_test, y_test, T ,classifier=None):
-    n = len(X_train,axis=1)
-    w = (1.0)/n * np.ones((n,1))
+def BinaryClassifier(X_train, y_train):
+    n = np.size(X_train,axis=0)
+    w = np.ones((np.size(X_train,axis=1),1))
 
+    idx_0 =[]
+    idx_1 =[]    
+    for idx,elem in enumerate(y_train):
+        if elem == 1:
+            idx_1.append(idx)
+        else:
+            idx_0.append(idx)
+    mu_0 = X_train[idx_0,1:]
+    mu_1 = X_train[idx_1,1:]
+
+    pi_1 = len(idx_1)*1.0/n
+    pi_0 = len(idx_0)*1.0/n
+    
+    cov  = np.cov(X_train[:,1:])
+
+    print pi_1, pi_0         
+    return w
+
+def OnlineClassifier(X_train, y_train):
+    w = np.ones((10,1))
+    return w
+
+def Adaboost(X_train, y_train, X_test, y_test, T ,classifier):
+    n = np.size(X_train,axis=0)
+    pt = (1.0)/n * np.ones((n,1))
+    alpha_list = []
+    eps_list = []
+    err_train = []
+    err_test  = []
     for i in range(0,T):
-        sample_indices = genC(n,w)
-        print sample_indices
+        Bt = genC(n,pt)
+        print Bt
+        X_bt = X_train[Bt]
+        y_bt = y_train[Bt]
+        if classifier ==BINARY:
+            w = BinaryClassifier(X_bt, y_bt)
         
 def p1():
     print "Part 1:\n"
@@ -62,11 +96,16 @@ def p1():
         hist, bins = np.histogram(sample, bins=len(w))
         print hist, bins
         plt.clf()
+        plt.xlabel("Generated Sample Indices")
+        plt.ylabel("Number")
+        plt.title("Histogram for n=%d"%n)
         plt.bar(np.array(range(0,len(hist))), np.array(hist), align='center')    
         plt.savefig(PATH+'../images/p1_hist_'+str(n)+'.jpg')
         
 def p2():
     print "Part 2:\n"
+    Adaboost(X_train, y_train, X_test, y_test, 10 , BINARY)
+    
     
 def p3():
     print "Part 3:\n"
