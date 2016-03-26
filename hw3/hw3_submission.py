@@ -86,20 +86,20 @@ def OnlineClassifier(X_train, y_train):
     n = np.size(X_train,axis=0)
     w = np.zeros((np.size(X_train,axis=1),1))
     
-    eta = 0.25   #step size
+    eta = 0.1   #step size
     for i in range(0,n):
-        print np.size(X_train[i],axis=0) 
-        z = np.array(y_train[i]*np.dot(X_train[i,:].T,w))
-        print z#print np.size(z, axis=0), np.size(z,axis=1)
-        sig = 1.0/(1+np.exp(-z))   
+    #    print np.size(X_train[i],axis=0) 
+    #    z = np.array(y_train[i]*np.dot(X_train[i,:].T,w))
+    #    print z#print np.size(z, axis=0), np.size(z,axis=1)
+    #    sig = 1.0/(1+np.exp(-z))   
         #print sig        #print np.size(y_train[i]*X_train[i,:],axis=0)
         #print np.size(y_train[i]*X_train[i,:],axis=1)
-        tem_w=np.array(eta*(1-sig[0])*y_train[i]*X_train[i,:])
-        w = (w + tem_w)
-        print np.size(w,axis=0),np.size(w,axis=1)
-        
-    return w[-1]
-
+    #    tem_w=np.array(eta*(1-sig[0])*y_train[i]*X_train[i,:])
+    #    w = (w + tem_w)
+    #    print np.size(w,axis=0),np.size(w,axis=1)
+        w = w + eta*(1-(1/(1+np.exp(-y_train[i]*np.dot(X_train[i,:],w)))))*(y_train[i]*X_train[i,:]).reshape(10,1)        
+    #return w[-1]
+    return w
 def calcEps(y_train, f_train, pt):
     print type(y_train)
     #print np.size(f_train, axis =1)
@@ -161,10 +161,10 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier, name):
         X_bt = X_train[Bt]
         y_bt = y_train[Bt]
         if classifier ==BINARY:
-            classifier_name = "Binary_Classifier"
+            classifier_name = "Binary Classifier"
             w = BinaryClassifier(X_bt, y_bt)
         elif classifier == ONLINE:
-            classifier_name = "Online_Classifier"
+            classifier_name = "Online Classifier"
             w = OnlineClassifier(X_bt, y_bt)
         elif classifier == NONE:
             w = BinaryClassifier(X_train, y_train)
@@ -198,10 +198,10 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier, name):
         
 
 #    f_boost = np.sum(f_boost)    
-    print "pt_list:", pt_list    
-    print "alpha_list", alpha_list
-    print "training Error:", err_train_list
-    print "testing Error:", err_test_list
+#    print "pt_list:", pt_list    
+#    print "alpha_list", alpha_list
+#    print "training Error:", err_train_list
+#    print "testing Error:", err_test_list
     plt.clf()
     plt.plot(err_train_list, 'r-', label="Training error")
     plt.plot(err_test_list, 'b-', label="Testing Error")    
@@ -210,6 +210,23 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier, name):
     plt.title("Error v/s iteration plot for "+classifier_name)
     plt.legend(loc='upper right', shadow=True)
     plt.savefig(name)
+
+    plt.clf()
+    plt.plot(alpha_list, 'r-', label="Alpha")
+    plt.xlabel("Values of t")
+    plt.ylabel(r"$\alpha_{t}$")
+    plt.title(r"$\mathrm{\alpha\ v/s\ iteration\ plot\ for\ %s}$"%classifier_name)
+    plt.legend(loc='upper right', shadow=True)
+    plt.savefig(name[:-9]+"alpha_plot.jpg")
+
+    plt.clf()
+    plt.plot(eps_list, 'r-', label="Epsilon")
+    plt.xlabel("Values of t")
+    plt.ylabel(r"$\epsilon_{t}$")
+    plt.title(r"$\mathrm{\epsilon\ v/s\ iteration\ plot\ for\ %s}$"%classifier_name)
+    plt.legend(loc='upper right', shadow=True)
+    plt.savefig(name[:-9]+"epsilon_plot.jpg")
+        
     
 def p1():
     print "Part 1:\n"
