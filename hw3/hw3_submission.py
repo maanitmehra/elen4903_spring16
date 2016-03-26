@@ -35,7 +35,7 @@ X_train= X[NUM_TEST:,:]
 y_test = y[:NUM_TEST,:]
 y_train= y[NUM_TEST:,:]
 
-NONE = 0
+NONE = 00
 BINARY = 1
 ONLINE = 2
 
