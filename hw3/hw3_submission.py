@@ -19,7 +19,7 @@ import matplotlib.cm as cm
 PATH = "./cancer_csv/"
 IMAGE_PATH = PATH+'../images/'
 NUM_TEST = 183  # Define the number of test cases
-T = 1000	# number of iterations of the problem
+T = 10	# number of iterations of the problem
 
 def getData(file):
     reader=csv.reader(open(file,"rb"),delimiter=',')
@@ -35,9 +35,10 @@ X_train= X[NUM_TEST:,:]
 y_test = y[:NUM_TEST,:]
 y_train= y[NUM_TEST:,:]
 
-NONE = 00
-BINARY = 1
-ONLINE = 2
+NO_BIN = 0
+NO_ONL = 1
+BINARY = 2
+ONLINE = 3
 
 def genC(n, w):
 	w_cumul	= w.cumsum()
@@ -155,6 +156,8 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier, name):
     
     f_boost_te = 0
     f_boost_tr = 0
+    if classifier == NO_BIN or classifier == NO_ONL:
+	T = 1
     for i in range(0,T):
         Bt = genC(n,pt)
         #print Bt
@@ -166,9 +169,11 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier, name):
         elif classifier == ONLINE:
             classifier_name = "Online Classifier"
             w = OnlineClassifier(X_bt, y_bt)
-        elif classifier == NONE:
+        elif classifier == NO_BIN:
             w = BinaryClassifier(X_train, y_train)
-            
+        elif classifier == NO_ONL:
+            w = OnlineClassifier(X_train, y_train)
+    
         w_list.append(w)
         f_train = calc_ft(X_train, w, classifier)
         f_test = calc_ft(X_test, w, classifier)
@@ -190,6 +195,11 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier, name):
         err_test = calcErr(f_boost_test, y_test)
         err_test_list.append(err_test)
 
+	if classifier == NO_ONL or classifier== NO_BIN:
+		C = conMat(f_boost_test, y_test)
+		print "\t +1\t -1"
+		print "+1\t %d\t %d" %(C[1,1],C[1,9])
+		print "-1\t %d\t %d" %(C[9,1], C[9,9])
         f_boost_tr = f_boost_tr + (alpha*f_train)
         f_boost_train = np.sign(f_boost_tr)
         
@@ -202,31 +212,34 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier, name):
 #    print "alpha_list", alpha_list
 #    print "training Error:", err_train_list
 #    print "testing Error:", err_test_list
-    plt.clf()
-    plt.plot(err_train_list, 'r-', label="Training error")
-    plt.plot(err_test_list, 'b-', label="Testing Error")    
-    plt.xlabel("Values of t")
-    plt.ylabel("Error Values")
-    plt.title("Error v/s iteration plot for "+classifier_name)
-    plt.legend(loc='upper right', shadow=True)
-    plt.savefig(name)
+    if classifier == BINARY or classifier == ONLINE:	
+	plt.clf()
+    	plt.plot(err_train_list, 'r-', label="Training error")
+    	plt.plot(err_test_list, 'b-', label="Testing Error")    
+    	plt.xlabel("Values of t")
+    	plt.ylabel("Error Values")
+    	plt.title("Error v/s iteration plot for "+classifier_name)
+    	plt.legend(loc='upper right', shadow=True)
+    	plt.savefig(name)
 
-    plt.clf()
-    plt.plot(alpha_list, 'r-', label="Alpha")
-    plt.xlabel("Values of t")
-    plt.ylabel(r"$\alpha_{t}$")
-    plt.title(r"$\mathrm{\alpha\ v/s\ iteration\ plot\ for\ %s}$"%classifier_name)
-    plt.legend(loc='upper right', shadow=True)
-    plt.savefig(name[:-9]+"alpha_plot.jpg")
+	plt.clf()
+    	plt.plot(alpha_list, 'r-', label="Alpha")
+    	plt.xlabel("Values of t")
+    	plt.ylabel(r"$\alpha_{t}$")
+    	plt.title(r"$\mathrm{\alpha\ v/s\ iteration\ plot\ for\ %s}$"%classifier_name)
+    	plt.legend(loc='upper right', shadow=True)
+    	plt.savefig(name[:-9]+"alpha_plot.jpg")
 
-    plt.clf()
-    plt.plot(eps_list, 'r-', label="Epsilon")
-    plt.xlabel("Values of t")
-    plt.ylabel(r"$\epsilon_{t}$")
-    plt.title(r"$\mathrm{\epsilon\ v/s\ iteration\ plot\ for\ %s}$"%classifier_name)
-    plt.legend(loc='upper right', shadow=True)
-    plt.savefig(name[:-9]+"epsilon_plot.jpg")
-        
+    	plt.clf()
+    	plt.plot(eps_list, 'r-', label="Epsilon")
+    	plt.xlabel("Values of t")
+    	plt.ylabel(r"$\epsilon_{t}$")
+    	plt.title(r"$\mathrm{\epsilon\ v/s\ iteration\ plot\ for\ %s}$"%classifier_name)
+    	plt.legend(loc='upper right', shadow=True)
+    	plt.savefig(name[:-9]+"epsilon_plot.jpg")
+
+    else:
+	print "\n",1-err_test_list[0], " is the accuracy of the unboosted classifier."
     
 def p1():
     print "Part 1:\n"
@@ -248,12 +261,13 @@ def p2():
     print "Part 2:\n"
     classifier = BINARY
     Adaboost(X_train, y_train, X_test, y_test, T , classifier, IMAGE_PATH+"binary_classifier_error.jpg")
-    
+    Adaboost(X_train, y_train, X_test, y_test, T , NO_BIN, IMAGE_PATH+"binary_classifier_error.jpg")    
     
 def p3():
     print "Part 3:\n"
     classifier = ONLINE
     Adaboost(X_train, y_train, X_test, y_test, T , classifier, IMAGE_PATH+"p3_error.jpg")
+    Adaboost(X_train, y_train, X_test, y_test, T , NO_ONL, IMAGE_PATH+"online_classifier_error.jpg")
     
 def main():
     print "Beginning Execution..."
