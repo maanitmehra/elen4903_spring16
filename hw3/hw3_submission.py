@@ -70,7 +70,6 @@ def BinaryClassifier(X_train, y_train):
 
     mu_0 = np.array(np.mean(cl_0,axis=0)).reshape(1,np.size(cl_0, axis=1))
     mu_1 = np.array(np.mean(cl_1, axis=0)).reshape(1, np.size(cl_1, axis=1))
-
     pi_1 = len(idx_1)*1.0/n
     pi_0 = len(idx_0)*1.0/n
     
@@ -86,19 +85,18 @@ def BinaryClassifier(X_train, y_train):
 def OnlineClassifier(X_train, y_train):
     n = np.size(X_train,axis=0)
     w = np.zeros((np.size(X_train,axis=1),1))
-
     
-        
-    eta = 0.1   #step size
+    eta = 0.25   #step size
     for i in range(0,n):
-        z = np.array(np.dot(y_train[i]*X_train[i,:],w))
-        #print np.size(z, axis=0), np.size(z,axis=1)
+        print np.size(X_train[i],axis=0) 
+        z = np.array(y_train[i]*np.dot(X_train[i,:].T,w))
+        print z#print np.size(z, axis=0), np.size(z,axis=1)
         sig = 1.0/(1+np.exp(-z))   
-        print "yX:"
-        print np.size(y_train[i]*X_train[i,:],axis=0)
+        #print sig        #print np.size(y_train[i]*X_train[i,:],axis=0)
         #print np.size(y_train[i]*X_train[i,:],axis=1)
-        w = np.array(w) + np.array(eta*(1-sig)*y_train[i]*X_train[i,:])
-        #print i
+        tem_w=np.array(eta*(1-sig[0])*y_train[i]*X_train[i,:])
+        w = (w + tem_w)
+        print np.size(w,axis=0),np.size(w,axis=1)
         
     return w[-1]
 
