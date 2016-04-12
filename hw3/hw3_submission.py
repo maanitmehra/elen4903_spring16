@@ -205,14 +205,32 @@ def Adaboost(X_train, y_train, X_test, y_test, T ,classifier, name):
         
         err_train = calcErr(f_boost_train, y_train)
         err_train_list.append(err_train)
-        
+    if classifier == BINARY:
+	points = [100, 280, 420]
+    elif classifier == ONLINE:
+	points = [35, 42, 123]        
 
 #    f_boost = np.sum(f_boost)    
 #    print "pt_list:", pt_list    
 #    print "alpha_list", alpha_list
 #    print "training Error:", err_train_list
 #    print "testing Error:", err_test_list
-    if classifier == BINARY or classifier == ONLINE:	
+    if classifier == BINARY or classifier == ONLINE:
+	pt_plot_list = np.zeros((len(points), n))
+	for idx,pt in enumerate(pt_list):
+		pt_plot_list[:,idx] = pt[points].reshape(len(points))
+	
+        plt.clf()
+	for i in range(0, len(points)):
+        	plt.plot(pt_plot_list.T[:,i], label=str(points[i]))
+        #plt.plot(err_test_list, 'b-', label="Testing Error")
+        plt.xlabel("Values of t")
+        plt.ylabel("Error Values")
+        plt.title("Plot of 3 pts. for "+classifier_name)
+        plt.legend(loc='upper right', shadow=True)
+        plt.savefig(name[:-9]+"3pts.jpg")
+	
+
 	plt.clf()
     	plt.plot(err_train_list, 'r-', label="Training error")
     	plt.plot(err_test_list, 'b-', label="Testing Error")    
