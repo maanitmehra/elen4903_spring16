@@ -1,0 +1,120 @@
+Q1:
+
+	 For t = 10:
+
+		Rank	w_t		College
+		1	0.018045	Mount Union
+		2	0.013829	St Thomas
+		3	0.012406	NW Missouri St
+		4	0.012182	Alabama
+		5	0.009050	Marian IN
+		6	0.008820	Linfield
+		7	0.008256	UW-Whitewater
+		8	0.008000	Clemson
+		9	0.007498	Wabash
+		10	0.006757	UW-Oshkosh
+		11	0.006756	North Dakota St
+		12	0.006722	West Georgia
+		13	0.006596	Morningside
+		14	0.006502	Shepherd
+		15	0.006400	St Francis IN
+		16	0.006353	Wheaton
+		17	0.006190	Wesley
+		18	0.006119	Thomas More
+		19	0.006018	Ohio State
+		20	0.005925	Mary Hardin-Baylor
+		21	0.005879	Johns Hopkins
+		22	0.005565	Slippery Rock
+		23	0.005474	Stanford
+		24	0.005446	Amherst
+		25	0.005344	Grand Valley St
+
+	 For t = 100:
+
+		Rank	w_t		College
+		1	0.058296	Mount Union
+		2	0.032117	Alabama
+		3	0.030921	NW Missouri St
+		4	0.024293	St Thomas
+		5	0.016924	Clemson
+		6	0.013411	Mississippi
+		7	0.012833	Ohio State
+		8	0.011267	Oklahoma
+		9	0.011165	Marian IN
+		10	0.010525	Stanford
+		11	0.010306	Michigan St
+		12	0.010047	Houston
+		13	0.008691	St Francis IN
+		14	0.008561	Linfield
+		15	0.008313	Michigan
+		16	0.007969	Iowa
+		17	0.007964	TCU
+		18	0.007723	Wesley
+		19	0.007645	Emporia St
+		20	0.007611	Florida
+		21	0.007546	LSU
+		22	0.007282	Arkansas
+		23	0.007206	Notre Dame
+		24	0.006883	UW-Whitewater
+		25	0.006849	Florida St
+
+	 For t = 1000:
+
+		Rank	w_t		College
+		1	0.060949	Alabama
+		2	0.031893	Clemson
+		3	0.025395	Mississippi
+		4	0.024252	Ohio State
+		5	0.020878	Oklahoma
+		6	0.019605	Stanford
+		7	0.019349	Michigan St
+		8	0.019005	Houston
+		9	0.015638	Michigan
+		10	0.014618	TCU
+		11	0.014613	Iowa
+		12	0.014440	Florida
+		13	0.014259	LSU
+		14	0.013727	Arkansas
+		15	0.013527	Notre Dame
+		16	0.012918	NW Missouri St
+		17	0.012813	Florida St
+		18	0.012628	Tennessee
+		19	0.012445	Mount Union
+		20	0.011187	Baylor
+		21	0.011006	Utah
+		22	0.010757	Navy
+		23	0.010739	Oklahoma St
+		24	0.010680	Northwestern
+		25	0.010112	North Carolina
+
+	 For t = 2500:
+
+		Rank	w_t		College
+		1	0.066742	Alabama
+		2	0.034911	Clemson
+		3	0.027803	Mississippi
+		4	0.026556	Ohio State
+		5	0.022822	Oklahoma
+		6	0.021446	Stanford
+		7	0.021177	Michigan St
+		8	0.020812	Houston
+		9	0.017118	Michigan
+		10	0.015968	Iowa
+		11	0.015968	TCU
+		12	0.015812	Florida
+		13	0.015609	LSU
+		14	0.015024	Arkansas
+		15	0.014806	Notre Dame
+		16	0.014019	Florida St
+		17	0.013820	Tennessee
+		18	0.012215	Baylor
+		19	0.012036	Utah
+		20	0.011767	Navy
+		21	0.011726	Oklahoma St
+		22	0.011682	Northwestern
+		23	0.011056	North Carolina
+		24	0.010742	Wisconsin
+		25	0.010660	Oregon
+
+
+	|| w_2500 - w_inf || = 0.047541
