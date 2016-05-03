@@ -1,0 +1,192 @@
+Running Q2:
+
+
+	Part 1:
+Plot RMSE
+1675606073.71 321033429.098
+Printing and choosing images.
+
+
+	Part 2:
+Plot RMSE
+Topic Modeling
+\begin{center}
+\begin{tabular}{||c | c | c ||} 
+&Topic Number 2 &
+Rank & Weight & Word\ [0.5ex]
+\hline\hline
+\hline
+		0	&	0.009584	&	room \\ \hline
+		1	&	0.009316	&	wear \\ \hline
+		2	&	0.008249	&	thing \\ \hline
+		3	&	0.007663	&	sit \\ \hline
+		4	&	0.006973	&	ask \\ \hline
+		5	&	0.006603	&	stand \\ \hline
+		6	&	0.006306	&	night \\ \hline
+		7	&	0.006236	&	tell \\ \hline
+		8	&	0.006079	&	walk \\ \hline
+		9	&	0.006012	&	little \\ \hline
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tabular}{||c | c | c ||} 
+&Topic Number 15 &
+Rank & Weight & Word\ [0.5ex]
+\hline\hline
+\hline
+		0	&	0.013677	&	play \\ \hline
+		1	&	0.013008	&	film \\ \hline
+		2	&	0.012010	&	character \\ \hline
+		3	&	0.011844	&	love \\ \hline
+		4	&	0.011243	&	movie \\ \hline
+		5	&	0.009741	&	man \\ \hline
+		6	&	0.009690	&	story \\ \hline
+		7	&	0.009158	&	life \\ \hline
+		8	&	0.008204	&	television \\ \hline
+		9	&	0.007817	&	star \\ \hline
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tabular}{||c | c | c ||} 
+&Topic Number 11 &
+Rank & Weight & Word\ [0.5ex]
+\hline\hline
+\hline
+		0	&	0.015860	&	art \\ \hline
+		1	&	0.010275	&	artist \\ \hline
+		2	&	0.009816	&	design \\ \hline
+		3	&	0.009122	&	collection \\ \hline
+		4	&	0.008520	&	museum \\ \hline
+		5	&	0.008516	&	image \\ \hline
+		6	&	0.007756	&	photograph \\ \hline
+		7	&	0.007378	&	exhibition \\ \hline
+		8	&	0.006998	&	century \\ \hline
+		9	&	0.006562	&	color \\ \hline
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tabular}{||c | c | c ||} 
+&Topic Number 7 &
+Rank & Weight & Word\ [0.5ex]
+\hline\hline
+\hline
+		0	&	0.027581	&	music \\ \hline
+		1	&	0.014055	&	performance \\ \hline
+		2	&	0.013461	&	play \\ \hline
+		3	&	0.012608	&	perform \\ \hline
+		4	&	0.011638	&	dance \\ \hline
+		5	&	0.011507	&	song \\ \hline
+		6	&	0.008932	&	sing \\ \hline
+		7	&	0.008689	&	concert \\ \hline
+		8	&	0.008565	&	band \\ \hline
+		9	&	0.008429	&	program \\ \hline
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tabular}{||c | c | c ||} 
+&Topic Number 6 &
+Rank & Weight & Word\ [0.5ex]
+\hline\hline
+\hline
+		0	&	0.035541	&	team \\ \hline
+		1	&	0.025418	&	player \\ \hline
+		2	&	0.022444	&	season \\ \hline
+		3	&	0.021871	&	game \\ \hline
+		4	&	0.019741	&	play \\ \hline
+		5	&	0.016593	&	coach \\ \hline
+		6	&	0.010451	&	sport \\ \hline
+		7	&	0.010277	&	baseball \\ \hline
+		8	&	0.010070	&	league \\ \hline
+		9	&	0.008910	&	football \\ \hline
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tabular}{||c | c | c ||} 
+&Topic Number 9 &
+Rank & Weight & Word\ [0.5ex]
+\hline\hline
+\hline
+		0	&	0.073029	&	father \\ \hline
+		1	&	0.060898	&	son \\ \hline
+		2	&	0.057345	&	mrs \\ \hline
+		3	&	0.047420	&	daughter \\ \hline
+		4	&	0.036435	&	graduate \\ \hline
+		5	&	0.032287	&	marry \\ \hline
+		6	&	0.032021	&	mother \\ \hline
+		7	&	0.024576	&	retire \\ \hline
+		8	&	0.024477	&	receive \\ \hline
+		9	&	0.021552	&	degree \\ \hline
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tabular}{||c | c | c ||} 
+&Topic Number 17 &
+Rank & Weight & Word\ [0.5ex]
+\hline\hline
+\hline
+		0	&	0.042855	&	company \\ \hline
+		1	&	0.022085	&	executive \\ \hline
+		2	&	0.018717	&	business \\ \hline
+		3	&	0.014747	&	president \\ \hline
+		4	&	0.012518	&	chief \\ \hline
+		5	&	0.011910	&	sell \\ \hline
+		6	&	0.011853	&	share \\ \hline
+		7	&	0.011074	&	sale \\ \hline
+		8	&	0.009768	&	buy \\ \hline
+		9	&	0.009504	&	chairman \\ \hline
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tabular}{||c | c | c ||} 
+&Topic Number 18 &
+Rank & Weight & Word\ [0.5ex]
+\hline\hline
+\hline
+		0	&	0.022727	&	charge \\ \hline
+		1	&	0.017343	&	official \\ \hline
+		2	&	0.013847	&	investigation \\ \hline
+		3	&	0.011361	&	case \\ \hline
+		4	&	0.011239	&	report \\ \hline
+		5	&	0.010904	&	office \\ \hline
+		6	&	0.009564	&	yesterday \\ \hline
+		7	&	0.008188	&	information \\ \hline
+		8	&	0.008149	&	prosecutor \\ \hline
+		9	&	0.007817	&	investigate \\ \hline
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tabular}{||c | c | c ||} 
+&Topic Number 3 &
+Rank & Weight & Word\ [0.5ex]
+\hline\hline
+\hline
+		0	&	0.036990	&	family \\ \hline
+		1	&	0.036012	&	child \\ \hline
+		2	&	0.021059	&	life \\ \hline
+		3	&	0.019865	&	woman \\ \hline
+		4	&	0.017409	&	live \\ \hline
+		5	&	0.015995	&	home \\ \hline
+		6	&	0.015120	&	friend \\ \hline
+		7	&	0.013385	&	wife \\ \hline
+		8	&	0.013359	&	young \\ \hline
+		9	&	0.012339	&	old \\ \hline
+\end{tabular}
+\end{center}
+\begin{center}
+\begin{tabular}{||c | c | c ||} 
+&Topic Number 16 &
+Rank & Weight & Word\ [0.5ex]
+\hline\hline
+\hline
+		0	&	0.030290	&	book \\ \hline
+		1	&	0.026576	&	write \\ \hline
+		2	&	0.026272	&	editor \\ \hline
+		3	&	0.016210	&	article \\ \hline
+		4	&	0.013828	&	writer \\ \hline
+		5	&	0.011994	&	read \\ \hline
+		6	&	0.011957	&	page \\ \hline
+		7	&	0.011704	&	publish \\ \hline
+		8	&	0.011010	&	author \\ \hline
+		9	&	0.008503	&	newspaper \\ \hline
+\end{tabular}
+\end{center}
